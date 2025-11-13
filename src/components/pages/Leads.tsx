@@ -1,20 +1,22 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Upload, Plus } from 'lucide-react';
 import { Button } from '../ui/button';
 
 export function Leads() {
-  const leads = [
-    { id: 1, name: 'Sarah Mitchell', phone: '(555) 123-4567', status: 'Qualified', lastCall: '2 hours ago', interest: 'High', notes: 'Looking for 3BR in downtown', nextAction: 'Send listings' },
-    { id: 2, name: 'John Peterson', phone: '(555) 234-5678', status: 'Pending', lastCall: '1 day ago', interest: 'Medium', notes: 'First-time buyer, pre-approved', nextAction: 'Schedule showing' },
-    { id: 3, name: 'Emma Rodriguez', phone: '(555) 345-6789', status: 'Qualified', lastCall: '3 hours ago', interest: 'High', notes: 'Ready to sell current home', nextAction: 'Market analysis' },
-    { id: 4, name: 'Michael Chen', phone: '(555) 456-7890', status: 'Unreachable', lastCall: '5 days ago', interest: 'Low', notes: 'No answer, left 3 voicemails', nextAction: 'Try email' },
-    { id: 5, name: 'Lisa Anderson', phone: '(555) 567-8901', status: 'Qualified', lastCall: '4 hours ago', interest: 'High', notes: 'Investment property seeker', nextAction: 'Send ROI report' },
-    { id: 6, name: 'David Kim', phone: '(555) 678-9012', status: 'Pending', lastCall: '2 days ago', interest: 'Medium', notes: 'Relocating from NYC', nextAction: 'Area overview call' },
-    { id: 7, name: 'Jennifer Taylor', phone: '(555) 789-0123', status: 'Qualified', lastCall: '1 hour ago', interest: 'High', notes: 'Luxury market, $2M+ budget', nextAction: 'Private showing' },
-    { id: 8, name: 'Robert Johnson', phone: '(555) 890-1234', status: 'Pending', lastCall: '3 days ago', interest: 'Medium', notes: 'Wants new construction', nextAction: 'Builder intro' },
-  ];
+  // Fetch real leads from API, not a static array
+  const [leads, setLeads] = useState([]);
+  const [isLoading, setLoading] = useState(true);
 
-  const getStatusColor = (status: string) => {
+  useEffect(() => {
+    fetch('https://my-worker.nexdoor-ai.workers.dev')
+      .then(res => res.json())
+      .then(json => {
+        setLeads(json.data ?? []);
+        setLoading(false);
+      });
+  }, []);
+
+  const getStatusColor = (status) => {
     switch (status) {
       case 'Qualified':
         return 'bg-green-100 text-green-800';
@@ -27,7 +29,7 @@ export function Leads() {
     }
   };
 
-  const getInterestColor = (interest: string) => {
+  const getInterestColor = (interest) => {
     switch (interest) {
       case 'High':
         return 'bg-green-100 text-green-800';
@@ -39,6 +41,8 @@ export function Leads() {
         return 'bg-gray-100 text-gray-800';
     }
   };
+
+  if (isLoading) return <div>Loading...</div>;
 
   return (
     <div className="max-w-[1440px] mx-auto">
