@@ -12,7 +12,7 @@ export function Onboarding({ onNavigate }: OnboardingProps) {
   const [autoProvision, setAutoProvision] = useState(true);
 
   const handleComplete = () => {
-    onNavigate('dashboard');
+    onNavigate('login');
   };
 
   return (

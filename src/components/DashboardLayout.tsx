@@ -1,16 +1,19 @@
 import React, { useState } from 'react';
-import { Search, LayoutDashboard, Users, Phone, Calendar, UserCog, CreditCard, BarChart3, Settings, Shield, MessageSquare, LogOut, Menu } from 'lucide-react';
+import {
+  Search, LayoutDashboard, Users, Phone, Calendar, UserCog,
+  CreditCard, BarChart3, Settings, Shield, MessageSquare, LogOut, Menu
+} from 'lucide-react';
 import { Input } from './ui/input';
-
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
   currentPage: string;
   onNavigate: (page: string) => void;
+  user: any;
+  onLogout: () => void;
 }
 
-
-export function DashboardLayout({ children, currentPage, onNavigate }: DashboardLayoutProps) {
+export function DashboardLayout({ children, currentPage, onNavigate, user, onLogout }: DashboardLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const menuItems = [
@@ -26,37 +29,34 @@ export function DashboardLayout({ children, currentPage, onNavigate }: Dashboard
     { id: 'support', label: 'Support', icon: MessageSquare },
   ];
 
-  // Handle navigation and close sidebar on mobile
   const handleNavigation = (page: string) => {
     onNavigate(page);
-    setSidebarOpen(false); // Close sidebar after clicking
+    setSidebarOpen(false);
   };
 
   return (
     <div className="flex h-screen w-full bg-[#F8FAFB]">
-      {/* Hamburger Menu Button (Mobile Only) */}
-      <button 
-        className="menu-toggle" 
+      {/* Hamburger Menu */}
+      <button
+        className="menu-toggle"
         onClick={() => setSidebarOpen(!sidebarOpen)}
         aria-label="Toggle menu"
       >
         <Menu className="w-6 h-6" />
       </button>
 
-      {/* Sidebar Overlay (Mobile Only) */}
-      <div 
+      {/* Sidebar Overlay */}
+      <div
         className={`sidebar-overlay ${sidebarOpen ? 'active' : ''}`}
         onClick={() => setSidebarOpen(false)}
       />
 
-      {/* Left Sidebar */}
+      {/* Sidebar */}
       <div className={`sidebar w-64 bg-[#2B2B2B] flex flex-col ${sidebarOpen ? 'open' : ''}`}>
-        {/* Logo */}
         <div className="h-16 flex items-center px-6 border-b border-[#374151]">
           <span className="text-white font-bold text-xl">nexdoor.ai</span>
         </div>
-        
-        {/* Navigation Menu */}
+
         <nav className="flex-1 py-6 px-4 overflow-y-auto">
           {menuItems.map((item) => {
             const Icon = item.icon;
@@ -66,8 +66,8 @@ export function DashboardLayout({ children, currentPage, onNavigate }: Dashboard
                 key={item.id}
                 onClick={() => handleNavigation(item.id)}
                 className={`w-full flex items-center gap-3 px-4 py-3 mb-2 rounded transition-colors ${
-                  isActive 
-                    ? 'bg-[#1E7A7A] text-white' 
+                  isActive
+                    ? 'bg-[#1E7A7A] text-white'
                     : 'text-gray-300 hover:bg-[#374151] hover:text-white'
                 }`}
               >
@@ -78,10 +78,9 @@ export function DashboardLayout({ children, currentPage, onNavigate }: Dashboard
           })}
         </nav>
 
-        {/* Logout */}
         <div className="p-4 border-t border-[#374151]">
           <button
-            onClick={() => handleNavigation('login')}
+            onClick={onLogout}
             className="w-full flex items-center gap-3 px-4 py-3 rounded text-gray-300 hover:bg-[#374151] hover:text-white transition-colors"
           >
             <LogOut className="w-5 h-5" />
@@ -90,9 +89,8 @@ export function DashboardLayout({ children, currentPage, onNavigate }: Dashboard
         </div>
       </div>
 
-      {/* Main Content Area */}
+      {/* Main Content */}
       <div className="flex-1 flex flex-col overflow-hidden">
-        {/* Top Search Bar */}
         <div className="h-16 bg-white border-b border-gray-200 flex items-center px-6 gap-4">
           <div className="flex-1 max-w-2xl relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
@@ -103,14 +101,13 @@ export function DashboardLayout({ children, currentPage, onNavigate }: Dashboard
             />
           </div>
           <div className="flex items-center gap-4">
-            <span className="text-sm text-gray-600">Account: Demo User</span>
+            <span className="text-sm text-gray-600">
+              Account: {user?.name ?? 'Demo User'}
+            </span>
           </div>
         </div>
 
-        {/* Page Content */}
-        <div className="flex-1 overflow-auto p-6">
-          {children}
-        </div>
+        <div className="flex-1 overflow-auto p-6">{children}</div>
       </div>
     </div>
   );

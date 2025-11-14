@@ -1,4 +1,17 @@
 import React, { useState } from 'react';
+import { Label } from '../ui/label';
+import { Input } from '../ui/input';
+import { Button } from '../ui/button';
+import { 
+  Select, 
+  SelectTrigger, 
+  SelectContent, 
+  SelectItem, 
+  SelectValue 
+} from '../ui/select';
+
+
+
 // ...your imports
 
 export function Register({ onNavigate }: RegisterProps) {
@@ -57,7 +70,9 @@ export function Register({ onNavigate }: RegisterProps) {
             <h1 className="mb-2">Create Account</h1>
             <p className="text-gray-600">Get started with nexdoor.ai</p>
           </div>
-          {message && <div className="mb-3 text-center text-red-600">{message}</div>}
+<div className="mb-3 text-center text-red-600 font-semibold z-50 relative">
+  {message}
+</div>
           <form onSubmit={handleRegister} className="space-y-6">
             <div>
               <Label htmlFor="name">Full Name</Label>
